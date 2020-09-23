@@ -172,7 +172,7 @@ model_stateful = create_model(stateful=True)
 # split train/test data
 def split_data(x, y, ratio=0.8):
     to_train = int(input_len * ratio)
-    # tweak to match with batch_size
+    # tweak to match with the batch_size
     to_train -= to_train % batch_size
 
     x_train = x[:to_train]
@@ -216,7 +216,8 @@ for i in range(epochs):
     model_stateful.fit(x_train,
                        y_train,
                        batch_size=batch_size,
-                       epochs=1,
+                       # Using 5 epochs would give longer spread and also make the code faster
+                       epochs=5,
                        verbose=1,
                        validation_data=(x_test, y_test),
                        shuffle=False)
@@ -288,7 +289,8 @@ predicted_stateless_err = y_test - predicted_stateless
 # Calculate limits for y axis
 max_err = max(abs(np.concatenate([y_test_err, predicted_stateful_err,
                                   predicted_stateless_err])))*1.1
-min_err = max_err * -1
+#Since we are using EPOCH=5 so the min_eror= max_err * -5
+min_err = max_err * -5
 
 # Plot errors
 plt.figure(figsize=(10, 10))
@@ -309,3 +311,4 @@ stateless_err.set_ylim([min_err, max_err])
 stateless_err.set_xlim([min_x, max_x])
 plt.title('Error in Stateless Predictions: Y_Test - predicted_stateless')
 plt.show()
+
